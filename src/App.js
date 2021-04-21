@@ -28,7 +28,25 @@ class App extends Component {
         lng: 0,
     }
 }
-
+handleApiLoaded = (map, maps) => {
+  console.log('i m the triagnle')
+    const triangleCoords = [
+      { lat: 593297, lng: 18.0924 },
+      { lat: 59.32794, lng: 18.09139 },
+      { lat: 59.32249871, lng: 18.083499666 }
+      
+    ];
+  
+     var deliveryTriangle = new maps.Polygon({
+      paths: triangleCoords,
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#FF0000",
+      fillOpacity: 0.35
+    });
+    deliveryTriangle.setMap(map);
+  }
 componentDidMount() {
   if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
@@ -45,6 +63,7 @@ componentDidMount() {
         })
       }
     }
+
  
  onSelection = (place) => {
     const latValue=place.geometry.location.lat(),
@@ -81,10 +100,13 @@ componentDidMount() {
  
     }
   render () {
+   
     const MapWithAMarker = withScriptjs(withGoogleMap(props =>
       <GoogleMap
         defaultZoom={14}
         defaultCenter={{ lat: this.state.mapPosition.lat, lng: this.state.mapPosition.lng }}
+        onGoogleApiLoaded={({ map, maps }) =>this.handleApiLoaded(map,maps)}
+        yesIWantToUseGoogleMapApiInternals
       >
         <Marker draggable={true} onDragEnd={this.onMarkerDrag}
           position={{ lat: this.state.markerPosition.lat, lng: this.state.markerPosition.lng }}
