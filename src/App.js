@@ -6,6 +6,7 @@ import {
   withGoogleMap,
   GoogleMap,
   Marker,
+  Polygon
 } from "react-google-maps";
 import Geocode from 'react-geocode';
 import AutoComplete from 'react-google-autocomplete';
@@ -28,25 +29,7 @@ class App extends Component {
         lng: 0,
     }
 }
-handleApiLoaded = (map, maps) => {
-  console.log('i m the triagnle')
-    const triangleCoords = [
-      { lat: 593297, lng: 18.0924 },
-      { lat: 59.32794, lng: 18.09139 },
-      { lat: 59.32249871, lng: 18.083499666 }
-      
-    ];
-  
-     var deliveryTriangle = new maps.Polygon({
-      paths: triangleCoords,
-      strokeColor: "#FF0000",
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: "#FF0000",
-      fillOpacity: 0.35
-    });
-    deliveryTriangle.setMap(map);
-  }
+
 componentDidMount() {
   if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
@@ -100,19 +83,28 @@ componentDidMount() {
  
     }
   render () {
-   
+    const triangleCoords = [
+      { lat: 593297, lng: 18.0924 },
+      { lat: 59.32794, lng: 18.09139 },
+      { lat: 59.32249871, lng: 18.083499666 }
+      
+    ];
     const MapWithAMarker = withScriptjs(withGoogleMap(props =>
       <GoogleMap
         defaultZoom={14}
         defaultCenter={{ lat: this.state.mapPosition.lat, lng: this.state.mapPosition.lng }}
-        onGoogleApiLoaded={({ map, maps }) =>this.handleApiLoaded(map,maps)}
-        yesIWantToUseGoogleMapApiInternals
+       
+        
       >
         <Marker draggable={true} onDragEnd={this.onMarkerDrag}
           position={{ lat: this.state.markerPosition.lat, lng: this.state.markerPosition.lng }}
         >
           <InfoWindow><div>hello</div></InfoWindow>
         </Marker>
+        <Polygon path={triangleCoords} strokeColor= "#FF0000"
+         strokeOpacity={0.8} 
+         strokeWeight={0.2}
+         visible={true}/>
         <AutoComplete onPlaceSelected={this.onSelection} />
       </GoogleMap>
     ));
